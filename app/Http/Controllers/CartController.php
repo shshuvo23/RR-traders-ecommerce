@@ -67,7 +67,7 @@ class CartController extends Controller
 
         return response()->json([
             'status'    => 'success',
-            // 'message'   => 'Product added to cart',
+            'message'   => 'Item added to cart successfully!',
             'cartCount' => $cartCount,
             'cartItems' => $cart,
         ]);

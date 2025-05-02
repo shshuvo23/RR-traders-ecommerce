@@ -84,7 +84,7 @@ class HomeController extends Controller
         $data['is_highlighted_categories'] = Category::where('is_highlighted', 1)
                                                         ->where('status', 1)
                                                         ->orderBy('orderby', 'asc') // Orders based on user-defined orderby column
-                                                        ->take(5)
+                                                        ->take(3)
                                                         ->get();
         $data['tranding_product'] = Product::Where('is_trending','1')->where('status','1')->orderBy('id', 'desc')->get();
         $data['new_arraivals'] = Product::Where('new_arraivals','1')->where('status','1')->orderBy('id', 'desc')->get();
