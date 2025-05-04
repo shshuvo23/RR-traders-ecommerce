@@ -12,14 +12,7 @@
     <meta name="keywords" content="{{ $seo->keywords ?? $meta_keywords }}">
 @endsection
 @push('style')
-    <style>
-        a.active {
-            color: #007bff;
-            /* Active color */
-            font-weight: bold;
-            /* Optional: make the active link bold */
-        }
-    </style>
+
 @endpush
 @php
     $localLanguage = Session::get('languageName');
@@ -27,32 +20,43 @@
 @section('content')
     <!-- ======================= breadcrumb start  ============================ -->
 @section('breadcrumb')
-    <li class="breadcrumb-item"> {{ $title }}</li>
+<li class="breadcrumb-li">
+    <span class="breadcrumb-text">{{ $title }}</span>
+</li>
+    {{-- <li class="breadcrumb-item"> {{ $title }}</li> --}}
 @endsection
 <!-- ======================= breadcrumb end  ============================ -->
 
-<div class="page-content pt-2 pb-2">
+<section class="main-content-wrap bg-color shop-page section-ptb">
     <div class="container">
         <div class="row">
-            <div class="col-lg-9 col-xl-10">
-                <div class="toolbox">
-                    <div class="toolbox-left">
-                        {{-- <div class="toolbox-info">
-                                Showing <span>9 of 56</span> Products
-                            </div> --}}
-                        <div class="toolbox-info">
-                            Showing
-                            <span>{{ $all_product->firstItem() }}</span>
-                            of <span>{{ $all_product->total() }}</span> Products
+            <div class="col">
+                <div class="pro-grli-wrapper left-side-wrap">
+                    <div class="pro-grli-wrap product-grid">
+                        <div class="collection-img-wrap">
+                            <h6 class="st-title" >Product list left ({{ $all_product->total() }})</h6>
+                            <!-- collection info start -->
+                            <div class="collection-info">
+                                <div class="collection-image" >
+                                    <img src="{{ asset('frontend/asset/img/banner/sall-banner.jpg') }}" class="img-fluid" alt="sall-banner">
+                                </div>
+                            </div>
+                            <!-- collection info end -->
                         </div>
-
-                    </div>
-
-                    <div class="toolbox-right">
-                    <div class="toolbox-right">
-                        <div class="toolbox-sort">
-                            <label for="sortby">Sort by:</label>
-                            <div class="select-custom">
+                        <!-- shop-top-bar start -->
+                        <div class="shop-top-bar wow">
+                            <div class="product-filter without-sidebar">
+                                <button class="filter-button" type="button"><i class="fa-solid fa-filter"></i><span>Filter</span></button>
+                            </div>
+                            <div class="product-view-mode">
+                                <!-- shop-item-filter-list start -->
+                                <a href="javascript:void(0)" class="list-change-view grid-three active" data-grid-view="3"><i class="fa-solid fa-border-all"></i></a>
+                                <a href="javascript:void(0)" data-grid-view="1" class="list-change-view list-one"><i class="fa-solid fa-list"></i></a>
+                                <!-- shop-item-filter-list end -->
+                            </div>
+                            <!-- product-short start -->
+                            <div class="product-short">
+                                <label for="SortBy nice-select">Sort by:</label>
                                 <select name="sortby" id="sortby" class="form-control">
                                     <option value="" class="d-none">Sort By</option>
                                     <option value="az" {{ request('sortby') == 'az' ? 'selected' : '' }}>A - Z</option>
@@ -61,242 +65,434 @@
                                     <option value="price_low_high" {{ request('sortby') == 'price_low_high' ? 'selected' : '' }}>Price: Low to High</option>
                                     <option value="date" {{ request('sortby') == 'date' ? 'selected' : '' }}>Date</option>
                                 </select>
+
+                                <a href="javascript:void(0)" class="short-title">
+                                    <span class="sort-title">Best Selling</span>
+                                    <span class="sort-icon"><i class="bi bi-chevron-down"></i></span>
+                                </a>
+                                <a href="javascript:void(0)" class="short-title short-title-lg">
+                                    <span class="sort-title">Best Selling</span>
+                                    <span class="sort-icon"><i class="bi bi-chevron-down"></i></span>
+                                </a>
+                                <ul class="pro-ul collapse">
+                                    <li class="pro-li"><a href="javascript:void(0)">Featured</a></li>
+                                    <li class="pro-li selected"><a href="javascript:void(0)">Best Selling</a></li>
+                                    <li class="pro-li"><a href="javascript:void(0)">Alphabetically, A-Z</a></li>
+                                    <li class="pro-li"><a href="javascript:void(0)">Alphabetically, Z-A</a></li>
+                                    <li class="pro-li"><a href="javascript:void(0)">Price, low to high</a></li>
+                                    <li class="pro-li"><a href="javascript:void(0)">Price, high to low</a></li>
+                                    <li class="pro-li"><a href="javascript:void(0)">Date, new to old</a></li>
+                                    <li class="pro-li"><a href="javascript:void(0)">Date, old to new</a></li>
+                                </ul>
                             </div>
+                            <!-- product-short end -->
                         </div>
-
-                    </div>
-                    </div>
-                </div>
-
-                <div class="products mb-3">
-                    <div class="row justify-content-center">
-
-                        @forelse ($all_product as $row)
-                            <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-1">
-                                <div class="product product-2 position-relative">
-                                    <ul class="listing-items">
-
-                                        {{-- <li>14"</li>
-                                        <li>Intel Core i5</li>
-                                        <li>16GB RAM</li>
-                                        <li>256GB SSD</li>
-                                        <li>Win 11</li> --}}
-                                        {{-- Max 5 Items --}}
-
-                                        @foreach ($row->feature as $feature)
-                                        {{-- @dd() --}}
-                                            <li>{{ $feature->feature }}</li>
-                                            {{-- Max 5 items, break if more than 5 --}}
-                                            @if ($loop->iteration >= 5)
-                                                @break
-                                            @endif
-
-                                        @endforeach
-                                    </ul>
-                                    <figure class="product-media">
-                                        <div class="product-cat">
-                                            <a href="#">{{ $row->category->name ?? '' }}</a>
+                        <!-- shop-top-bar end -->
+                        <!-- Latest-product start -->
+                        <div class="special-product grid-3">
+                            <div class="collection-category">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="collection-wrap">
+                                            <ul class="product-view-ul">
+                                                @forelse ($all_product as $row)
+                                                    <li class="pro-item-li" >
+                                                        <div class="single-product-wrap">
+                                                            <div class="product-image banner-hover">
+                                                                <a href="{{ route('productDetails', $row->slug) }}" class="pro-img">
+                                                                    <img src="{{ asset($row->thumbnail ?? '') }}" class="img-fluid img1 mobile-img1" alt="p1">
+                                                                    {{-- <img src="img/product/home1-pro-2.jpg" class="img-fluid img2 mobile-img2" alt="p2"> --}}
+                                                                </a>
+                                                                <div class="product-action">
+                                                                    <a href="#quickview" class="quickview" data-bs-toggle="modal" data-bs-target="#quickview">
+                                                                        <span class="tooltip-text">Quickview</span>
+                                                                        <span class="pro-action-icon"><i class="feather-eye"></i></span>
+                                                                    </a>
+                                                                    <a href="javascript:void(0)" data-id="{{ $row->id }}" class="addToCart add-to-cart" data-bs-toggle="modal" data-bs-target="#add-to-cart">
+                                                                        <span class="tooltip-text">Add to cart</span>
+                                                                        <span class="pro-action-icon"><i class="feather-shopping-bag"></i></span>
+                                                                    </a>
+                                                                    @php
+                                                                        $isInWishlist =
+                                                                            auth()->check() &&
+                                                                            auth()->user()->wishlist->contains('product_id', $row->id);
+                                                                    @endphp
+                                                                    <a href="javascript:void(0)" data-id="{{ $row->id }}" class="wishlist addToWishlist">
+                                                                        <span class="tooltip-text">Wishlist</span>
+                                                                        <span class="pro-action-icon">
+                                                                            <i class="{{ $isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart' }}"></i>
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="product-caption">
+                                                                <div class="product-content">
+                                                                    <div class="product-sub-title">
+                                                                        <span>Wireless device</span>
+                                                                    </div>
+                                                                    <div class="product-title">
+                                                                        <h6><a href="{{ route('productDetails', $row->slug) }}">{{ $row->title }}</a></h6>
+                                                                    </div>
+                                                                    <div class="product-price">
+                                                                        <div class="pro-price-box">
+                                                                            @if ($row->discount && $row->discount > 0)
+                                                                                @php
+                                                                                    $discountPrice = $row->price - ($row->price * $row->discount) / 100;
+                                                                                @endphp
+                                                                                <span class="new-price">
+                                                                                    ${{ number_format($discountPrice, 2) }}
+                                                                                </span>
+                                                                                <span class="old-price">${{ number_format($row->price, 2) }}</span>
+                                                                            @else
+                                                                                <span class="new-price">${{ number_format($row->price, 2) }}</span>
+                                                                            @endif
+                                                                            {{-- <span class="new-price">$10.00</span>
+                                                                            <span class="old-price">$15.00</span> --}}
+                                                                        </div>
+                                                                    </div>
+                                                                    {{-- <div class="product-description">
+                                                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                                                                    </div> --}}
+                                                                    <div class="product-action">
+                                                                        <a href="#quickview" class="quickview" data-bs-toggle="modal" data-bs-target="#quickview">
+                                                                            <span class="tooltip-text">Quickview</span>
+                                                                            <span class="pro-action-icon"><i class="feather-eye"></i></span>
+                                                                        </a>
+                                                                        <a href="javascript:void(0)" data-id="{{ $row->id }}" class="addToCart add-to-cart" data-bs-toggle="modal" data-bs-target="#add-to-cart">
+                                                                            <span class="tooltip-text">Add to cart</span>
+                                                                            <span class="pro-action-icon"><i class="feather-shopping-bag"></i></span>
+                                                                        </a>
+                                                                        <a href="javascript:void(0)" data-id="{{ $row->id }}" class="addToWishlist wishlist">
+                                                                            <span class="tooltip-text">Wishlist</span>
+                                                                            <span class="pro-action-icon">
+                                                                                <i class="{{ $isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart' }}"></i>
+                                                                            </span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="pro-label-retting">
+                                                                    <div class="product-ratting">
+                                                                        <span class="pro-ratting">
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                            <i class="fa-solid fa-star"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="product-label pro-new-sale">
+                                                                        <span class="product-label-title">Sale<span>{{ $row->discount }}%</span></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                @empty
+                                                    <p>No Data Found</p>
+                                                @endforelse
+                                            </ul>
                                         </div>
-                                        <a href="{{ route('productDetails', $row->slug) }}">
-                                            <img src="{{ asset($row->thumbnail ?? '') }}" alt="Product image"
-                                                class="product-image">
-                                        </a>
-                                        <!-- <div class="product-action-vertical">
-                                                <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                                            </div> -->
-                                    </figure>
-
-                                    <div class="product-body px-3 py-0">
-                                        <div class="product-action mb-1">
-                                            <a href="javascript:void(0)" data-id="{{ $row->id }}"
-                                                class="btn-product btn-cart addToCart open-offcanvas" title="Add to cart"><span>add to
-                                                    cart</span></a>
+                                        <div class="paginatoin-area">
+                                            <ul class="pagination-page-box" >
+                                                {{ $all_product->links() }}
+                                                {{-- <li class="number active"><a href="javascript:void(0)" class="theme-glink">1</a></li>
+                                                <li class="number"><a href="javascript:void(0)" class="gradient-text">2</a></li>
+                                                <li class="page-next"><a href="javascript:void(0)" class="theme-glink"><i class="fa -solid fa-angle-right"></i></a></li> --}}
+                                            </ul>
                                         </div>
-
-                                        @php
-                                            $isInWishlist =
-                                                auth()->check() &&
-                                                auth()->user()->wishlist->contains('product_id', $row->id);
-                                        @endphp
-                                        <div class="product-action wishlist mb-2">
-                                            <a href="javascript:void(0)" data-id="{{ $row->id }}"
-                                                class="btn-product btn-wishlist addToWishlist"
-                                                title="Add to Wishlist"><span>
-                                                    {{-- <i class="fa-regular fa-heart"></i> add to wishlist</span> --}}
-                                                    <i
-                                                        class="{{ $isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart' }}"></i>
-                                                    <span>
-                                                        {{ $isInWishlist ? 'Added to Wishlist' : 'Add to Wishlist' }}
-                                                    </span>
-                                            </a>
-                                        </div>
-
-                                        {{-- <div class="product-action wishlist mb-2">
-                                                <a href="#" class="btn-product btn-wishlist" title="Add to cart"><span>add to wishlist</span></a>
-                                            </div> --}}
-                                        <div class="product-price">
-                                            @if ($row->discount && $row->discount > 0)
-                                                @php
-                                                    $discountPrice = $row->price - ($row->price * $row->discount) / 100;
-                                                @endphp
-                                                <span class="new-price">
-                                                    ${{ number_format($discountPrice, 2) }}
-                                                </span>
-                                                <span class="old-price">${{ number_format($row->price, 2) }}</span>
-                                            @else
-                                                <span class="new-price">${{ number_format($row->price, 2) }}</span>
-                                            @endif
-                                            {{-- <span class="new-price">${{ $row->price ?? ''}}</span>
-                                                <sup> <span class="old-price">${{ $row->discount ?? '' }}</span> </sup> --}}
-                                        </div>
-                                        <h3 class="product-title"><a
-                                                href="{{ route('productDetails', $row->slug) }}">{{ $row->title }}</a>
-                                        </h3>
                                     </div>
                                 </div>
                             </div>
-                        @empty
-                            <p>No Data Found</p>
-                        @endforelse
-                    </div>
-                </div>
-
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-
-                        <li class="page-item active" aria-current="page">
-                            {{ $all_product->links() }}
-                        </li>
-
-                    </ul>
-                </nav>
-            </div>
-            <aside class="col-lg-3 col-xl-2 order-lg-first">
-                <div class="sidebar sidebar-shop">
-                    <div class="widget widget-clean">
-                        <label>Filters:</label>
-                        <a href="{{route('shop')}}" class="">Clear All</a>
-                    </div>
-
-                    <div class="widget widget-collapsible">
-                        <h3 class="widget-title">
-                            <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true"
-                                aria-controls="widget-1">
-                                Category
-                            </a>
-                        </h3>
-
-                        <div class="collapse show" id="widget-1">
-                            <div class="widget-body">
-                                <div class="filter-items filter-items-count">
-
-                                    @foreach ($category as $cat)
-                                        <div class="filter-item">
-                                            <label for="cat-{{ $cat->id }}">
-                                                <a href="{{ route('shop', $cat->slug) }}"
-                                                    class="text-muted {{ request()->is('shop/' . $cat->slug) ? 'active' : '' }}">
-                                                    {{ $cat->name }}
-                                                </a>
-                                            </label>
-                                            <span class="item-count">{{ $cat->products_count }}</span>
-                                        </div>
-                                    @endforeach
-
-
-
-
-                                    {{-- @foreach ($category as $cat)
-                                       <div class="filter-item">
-                                           <div class="custom-control custom-checkbox">
-                                               <input type="checkbox" class="custom-control-input d-none" id="cat-{{ $cat->id }}" name="category[]" value="{{ $cat->id }}">
-                                               <label class="custom-control-label" for="cat-{{ $cat->id }}">{{ $cat->name }}</label>
-                                           </div>
-                                           <span class="item-count">{{ $cat->products_count }}</span>
-                                       </div>
-                                        @endforeach --}}
-                                </div>
-                            </div>
                         </div>
+                        <!-- Latest-product end -->
                     </div>
-
-
-                    <div class="widget widget-collapsible">
-                        <h3 class="widget-title">
-                            <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true"
-                                aria-controls="widget-4">
-                                Brand
-                            </a>
-                        </h3>
-
-                        <div class="collapse show" id="widget-4">
-                            <div class="widget-body">
-                                <div class="filter-items">
-
-                                    {{-- @foreach ($brands as $brand)
-                                        <div class="filter-item">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input"
-                                                    id="brand-1">
-                                                <label class="custom-control-label" for="brand-1">{{ $brand->name }}</label>
+                    <div class="pro-grli-wrap product-sidebar">
+                        <div class="pro-grid-block">
+                            <div class="shop-sidebar-inner">
+                                <div class="shop-sidebar-wrap filter-sidebar">
+                                    <!-- button start -->
+                                    <button class="close-sidebar" type="button">
+                                    <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    <!-- button end -->
+                                    <!-- filter-form start -->
+                                    <div class="facets">
+                                        <form class="facets-form">
+                                            <div class="facets-wrapper">
+                                                <!-- Product-Categories start -->
+                                                <div class="shop-sidebar">
+                                                    <h6 class="shop-title" >Categories</h6>
+                                                    <a href="#collapse-5" data-bs-toggle="collapse" class="shop-title shop-title-lg" >Categories<i class="fa fa-angle-down"></i></a>
+                                                    <div class="collapse show shop-element" id="collapse-5">
+                                                        <ul class="brand-ul scrollbar">
+                                                            @foreach ($category as $cat)
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label">
+                                                                        <a href="{{ route('shop', $cat->slug) }}"
+                                                                            class="text-muted {{ request()->is('shop/' . $cat->slug) ? 'active' : '' }}">
+                                                                            <span class="">{{ $cat->name }}</span>
+                                                                        <span class="count-check">({{ $cat->products_count }})</span>
+                                                                        <span class=""></span>
+                                                                        </a>
+                                                                        {{-- <input type="checkbox" class="cust-checkbox">
+                                                                        <span class="check-name">{{ $cat->name }}</span>
+                                                                        <span class="count-check">({{ $cat->products_count }})</span>
+                                                                        <span class="cust-check"></span> --}}
+                                                                    </label>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <!-- Product-Categories end -->
+                                                <div class="shop-sidebar sidebar-filter">
+                                                    <h6 class="shop-title" >Filter</h6>
+                                                    <a href="javascript:void(0)" class="shop-title shop-title-lg" >Filter</a>
+                                                    <div class="filter-info" >
+                                                        <span class="filter-count-text">{{ $all_product->total() }} products</span>
+                                                        <span class="loading-spinner"><svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle></svg></span>
+                                                    </div>
+                                                </div>
+                                                <div class="shop-sidebar sidebar-price">
+                                                    <h6 class="shop-title" >Price</h6>
+                                                    <a href="#collapse-3" data-bs-toggle="collapse" class="shop-title shop-title-lg" >Price</a>
+                                                    <div class="filter-info" >
+                                                        <span class="shop-price">The highest price is $89.00</span>
+                                                        <facet-remove><a href="collection.html" class="reset-text">Reset</a></facet-remove>
+                                                    </div>
+                                                    <!-- Product-price start -->
+                                                    <div class="collapse price-wrap" id="collapse-3">
+                                                        <price-range class="price-range">
+                                                            <div class="price-range-group group-range">
+                                                                <input type="range" class="range" min="0" max="89" value="0" id="range1">
+                                                                <input type="range" class="range" min="0" max="89" value="89" id="range2">
+                                                            </div>
+                                                            <div class="price-input-group group-input" >
+                                                                <div class="price-range-input input-price">
+                                                                    <label class="label-text">From</label>
+                                                                    <span class="price-value">$</span>
+                                                                    <span id="demo1" class="price-field">0</span>
+                                                                </div>
+                                                                <span class="price-range-delimeter">-</span>
+                                                                <div class="price-range-input input-price">
+                                                                    <label class="label-text">To</label>
+                                                                    <span class="price-value">$</span>
+                                                                    <span id="demo2" class="price-field">89</span>
+                                                                </div>
+                                                            </div>
+                                                        </price-range>
+                                                    </div>
+                                                    <!-- Product-price end -->
+                                                    <!-- More-filters start -->
+                                                    {{-- <div class="shop-sidebar sidebar-open">
+                                                        <h6 class="shop-title" >More filters</h6>
+                                                        <a href="#collapse-6" data-bs-toggle="collapse" class="shop-title shop-title-lg" >More filters<i class="fa fa-angle-down"></i></a>
+                                                        <div class="filter-info" >
+                                                            <span class="shop-price">0 selected</span>
+                                                            <facet-remove>
+                                                            <a href="collection-list-right.html" class="reset-text">Reset</a>
+                                                            </facet-remove>
+                                                        </div>
+                                                        <div class="collapse shop-element shop-flavor" id="collapse-6">
+                                                            <ul class="brand-ul scrollbar">
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 16gb">
+                                                                        <input type="checkbox" value="16gb" class="cust-checkbox">
+                                                                        <span class="check-name">Air conditioner</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 32gb">
+                                                                        <input type="checkbox" value="32gb" class="cust-checkbox">
+                                                                        <span class="check-name">Portable speaker</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 64gb">
+                                                                        <input type="checkbox" value="64gb" class="cust-checkbox">
+                                                                        <span class="check-name">Wireless earbuds</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 500gb">
+                                                                        <input type="checkbox" value="500gb" class="cust-checkbox">
+                                                                        <span class="check-name">Ev charging plug</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 1tb">
+                                                                        <input type="checkbox" value="1tb" class="cust-checkbox">
+                                                                        <span class="check-name">DVD player slot</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 2tb">
+                                                                        <input type="checkbox" value="2tb" class="cust-checkbox">
+                                                                        <span class="check-name">Verse earphones</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 3tb">
+                                                                        <input type="checkbox" value="3tb" class="cust-checkbox">
+                                                                        <span class="check-name">Video shoot drone</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 3tb">
+                                                                        <input type="checkbox" value="3tb" class="cust-checkbox">
+                                                                        <span class="check-name">Collection right</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 3tb">
+                                                                        <input type="checkbox" value="3tb" class="cust-checkbox">
+                                                                        <span class="check-name">Wifro wi-fi camera</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 3tb">
+                                                                        <input type="checkbox" value="3tb" class="cust-checkbox">
+                                                                        <span class="check-name">Movie projector S8</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 3tb">
+                                                                        <input type="checkbox" value="3tb" class="cust-checkbox">
+                                                                        <span class="check-name">Wireless headphones</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                                <li class="cat-checkbox" >
+                                                                    <label class="checkbox-label 3tb">
+                                                                        <input type="checkbox" value="3tb" class="cust-checkbox">
+                                                                        <span class="check-name">Stylish for trimmer</span>
+                                                                        <span class="count-check">(12)</span>
+                                                                        <span class="cust-check"></span>
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div> --}}
+                                                    <!-- More-filters end -->
+                                                </div>
+                                                {{-- <div class="shop-sidebar sidebar-product">
+                                                    <h6 class="shop-title" >Product type</h6>
+                                                    <a href="#collapse-2" data-bs-toggle="collapse" class="shop-title shop-title-lg" >Product type</a>
+                                                    <div class="filter-info" >
+                                                        <span class="shop-price no-js-hidden">0 selected</span>
+                                                        <facet-remove>
+                                                        <a href="collection.html" class="reset-text">Reset</a>
+                                                        </facet-remove>
+                                                    </div>
+                                                    <div class="collapse filter-element" id="collapse-2" >
+                                                        <ul class="brand-ul scrollbar">
+                                                            <li class="brand-li">
+                                                                <label class="cust-checkbox-label">
+                                                                    <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                    <span class="filter-name">Electon</span>
+                                                                    <span class="count-check">(23)</span>
+                                                                    <span class="cust-check"></span>
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="shop-sidebar sidebar-wedget">
+                                                    <h6 class="shop-title" >Availability</h6>
+                                                    <a href="#collapse-1" class="shop-title shop-title-lg" data-bs-toggle="collapse" >Availability</a>
+                                                    <div class="filter-info" >
+                                                        <span class="shop-price no-js-hidden">0 selected</span>
+                                                        <facet-remove>
+                                                        <a href="collection.html" class="reset-text">Reset</a>
+                                                        </facet-remove>
+                                                    </div>
+                                                    <div class="collapse filter-element" id="collapse-1" >
+                                                        <ul class="brnad-ul scrollbar">
+                                                            <li class="availability">
+                                                                <label class="cust-checkbox-label availability in-stock">
+                                                                    <input type="checkbox" name="filter.v.availability" value="1" class="cust-checkbox">
+                                                                    <span class="filter-name">In stock</span>
+                                                                    <span class="count-check">(23)</span>
+                                                                    <span class="cust-check"></span>
+                                                                </label>
+                                                            </li>
+                                                            <li class="availability">
+                                                                <label class="cust-checkbox-label availability in-stock">
+                                                                    <input type="checkbox" name="filter.v.availability" value="1" class="cust-checkbox">
+                                                                    <span class="filter-name">Out of stock</span>
+                                                                    <span class="count-check">(1)</span>
+                                                                    <span class="cust-check"></span>
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div> --}}
+                                                {{-- <div class="shop-sidebar sidebar-wedget">
+                                                    <h6 class="shop-title" >Brand</h6>
+                                                    <a href="#reset" data-bs-toggle="collapse" class="shop-title shop-title-lg" >Brand</a>
+                                                    <div class="filter-info" >
+                                                        <span class="shop-price no-js-hidden">0 selected</span>
+                                                        <facet-remove>
+                                                        <a href="collection.html" class="reset-text">Reset</a>
+                                                        </facet-remove>
+                                                    </div>
+                                                    <div class="collapse filter-element" id="reset" >
+                                                        <ul class="brand-ul scrollbar">
+                                                            <li class="brand-li">
+                                                                <label class="cust-checkbox-label">
+                                                                    <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                    <span class="filter-name">Electon</span>
+                                                                    <span class="count-check">(23)</span>
+                                                                    <span class="cust-check"></span>
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div> --}}
                                             </div>
-                                        </div>
-                                        @endforeach --}}
-                                        @foreach ($brands as $brand)
-                                        <div class="filter-item">
-                                            <label for="brand-{{ $brand->slug }}">
-                                                <a href="{{ route('shop', ['brand' => $brand->slug]) }}"
-                                                   class="text-muted {{ request()->get('brand') == $brand->slug ? 'active' : '' }}">
-                                                    {{ $brand->name }}
-                                                </a>
-                                            </label>
-                                        </div>
-                                    @endforeach
-
-
+                                        </form>
+                                    </div>
+                                    <!-- filter-form end -->
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="widget widget-collapsible">
-                        <h3 class="widget-title">
-                            <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true"
-                                aria-controls="widget-5">
-                                Price
-                            </a>
-                        </h3>
-
-                        <div class="collapse show" id="widget-5">
-                            <div class="widget-body">
-                                <div class="filter-price">
-                                    {{-- <div class="filter-price-text">
-                                        Price Range:
-                                    </div> --}}
-                                    <div class="d-flex">
-                                        <input type="number" id="min_price" name="min_price" class="form-control"
-                                            placeholder="Min" value="{{ request('min_price') }}">
-                                        <span class="mx-2"> - </span>
-                                        <input type="number" id="max_price" name="max_price" class="form-control"
-                                            placeholder="Max" value="{{ request('max_price') }}">
-                                    </div>
-                                    <button type="button" class="btn btn-primary mt-2" onclick="filterProducts()">Apply</button>
-                                </div>
-                                {{-- <div class="filter-price">
-                                    <div class="filter-price-text">
-                                        Price Range:
-                                        <span id="filter-price-range"></span>
-                                    </div>
-
-                                    <div id="price-slider"></div>
-                                </div> --}}
-                            </div>
+                            <!-- sidebar img start -->
+                            {{-- <div class="sidebar-banner banner-hover">
+                                <a href="collection.html" class="sidebar-img banner-img">
+                                    <span class="sidebar-banner-image" >
+                                        <img src="img/banner/side-banner.jpg" class="img-fluid" alt="side-banner">
+                                    </span>
+                                    <span class="sidebar-banner-icon"><i class="bi bi-arrow-right-short"></i></span>
+                                </a>
+                            </div> --}}
+                            <!-- sidebar img start -->
                         </div>
                     </div>
                 </div>
-            </aside>
+            </div>
         </div>
     </div>
-</div>
+</section>
 @endsection
 
 @push('script')

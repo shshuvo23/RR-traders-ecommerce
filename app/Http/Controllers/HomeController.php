@@ -148,7 +148,7 @@ class HomeController extends Controller
         }
 
 
-        $data['all_product'] = $productQuery->paginate(24);
+        $data['all_product'] = $productQuery->paginate(4);
 
 
         // $data['all_product'] = Product::where('status', '1')
