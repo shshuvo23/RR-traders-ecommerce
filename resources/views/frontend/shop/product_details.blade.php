@@ -265,16 +265,31 @@
                                 <div class="product-info">
                                     <!-- product-title start -->
                                     <div class="product-title">
-                                        <h2>Wireless earbuds</h2>
+                                        <h2>{{ $product->title }}</h2>
                                     </div>
                                     <!-- product-title end -->
                                 </div>
                                 <div class="product-info">
                                     <div class="pro-prlb pro-sale">
                                         <div class="price-box">
-                                            <span class="new-price">$21.00</span>
-                                            <span class="old-price">$25.00</span>
-                                            <span class="percent-count">16</span>
+                                            @if ($product->discount && $product->discount > 0)
+                                                @php
+                                                    $discountPrice = $product->price - ($product->price * $product->discount) / 100;
+                                                @endphp
+                                                <span class="new-price">
+                                                    ${{ number_format($discountPrice, 2) }}
+                                                </span>
+                                                <span class="old-price">
+                                                    ${{ number_format($product->price, 2) }}
+                                                </span>
+                                            @else
+                                                <span class="new-price" style="color: #000; font-weight: bold; font-size: 18px;">
+                                                    ${{ number_format($product->price, 2) }}
+                                                </span>
+                                            @endif
+                                            {{-- <span class="new-price">$21.00</span>
+                                            <span class="old-price">$25.00</span> --}}
+                                            <span class="percent-count">{{ $product->discount }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -335,7 +350,9 @@
                                             <div class="product-quantity">
                                                 <div class="cart-plus-minus">
                                                     <button class="dec qtybutton minus"><i class="fa-solid fa-minus"></i></button>
-                                                    <input type="text" name="quantity" value="1">
+                                                    <input type="number" id="qty" class="form-control" value="1" min="1"
+                                                            max="{{ $product->stock }}" step="1" data-decimals="0" required>
+                                                    {{-- <input type="text" name="quantity" value="1"> --}}
                                                     <button class="inc qtybutton plus"><i class="fa-solid fa-plus"></i></button>
                                                 </div>
                                             </div>
@@ -346,8 +363,10 @@
                                     <div class="product-actions">
                                         <!-- pro-deatail button start -->
                                         <div class="pro-detail-button">
-                                            <button type="button" onclick="location. href='cart-page.html'" class="btn add-to-cart ajax-spin-cart">
-                                            <span class="cart-title">Add to cart</span>
+                                            <a href="javascript:void(0)" data-id="{{ $product->id }}"
+                                                class="btn add-to-cart addToCartproductdetails"><span>add to cart</span></a>
+                                            {{-- <button type="button" onclick="location. href='cart-page.html'" class="btn add-to-cart ajax-spin-cart">
+                                            <span class="cart-title">Add to cart</span> --}}
                                             </button>
                                             <a href="cart-empty.html" class="btn btn-cart btn-theme">
                                                 <span>Buy now</span>
@@ -521,9 +540,11 @@
         // Add to cart button click
         $('.addToCartproductdetails').on('click', function() {
             let productId = $(this).data('id');
-            console.log(productId);
+            // console.log(productId);
 
             let quantity = parseInt($('#qty').val()); // Get the quantity from the input field
+            // console.log(quantity);
+
 
             let stock = parseInt($('#qty').attr('max')); // Get the stock from the max attribute
 

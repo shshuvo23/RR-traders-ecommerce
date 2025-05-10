@@ -19,155 +19,304 @@
 @section('content')
     <!-- ======================= breadcrumb start  ============================ -->
     @section('breadcrumb')
-        <li class="breadcrumb-item"> {{$title}}</li>
+    <li class="breadcrumb-li">
+        <span class="breadcrumb-text">{{ $title }}</span>
+    </li>
     @endsection
     <!-- ======================= breadcrumb end  ============================ -->
 
-    <div class="page-content pt-2 pb-2">
-        <div class="">
+    <section class="cart-page section-ptb">
+        <form method="post">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-9">
-                        <div class="cart_table">
-                            <table class="table table-cart table-mobile m-0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:50%;">Product</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                        <th>Total</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @if (count($cartItems) > 0)
-                                        @foreach ($cartItems as $item)
-                                            <tr>
-                                                <td class="product-col">
-                                                    <div class="product">
-                                                        <figure class="product-media">
-                                                            <a href="{{route('productDetails', $item['slug'])}}">
-                                                                <img src="{{asset($item['thumbnail'])}}"
-                                                                    alt="Product image">
+                    <div class="col">
+                        <div class="cart-page-wrap">
+                            <div class="cart-wrap-info">
+                                <div class="cart-item-wrap">
+                                    <div class="cart-title">
+                                        <h6>My cart:</h6>
+                                        <span class="cart-count">
+                                            <span class="cart-counter">3</span>
+                                            <span class="cart-item-title">Items</span>
+                                        </span>
+                                    </div>
+                                    <div class="item-wrap">
+                                        <ul class="cart-wrap">
+                                            <!-- cart-info start -->
+                                            @if (count($cartItems) > 0)
+                                                @foreach ($cartItems as $item)
+                                                    <li class="item-info">
+                                                        <!-- cart-img start -->
+                                                        <div class="item-img">
+                                                            <a href="product-template.html">
+                                                                <img src="{{asset($item['thumbnail'])}}" class="img-fluid" alt="p-1">
                                                             </a>
-                                                        </figure>
+                                                        </div>
+                                                        <!-- cart-img end -->
+                                                        <!-- cart-title start -->
+                                                        <div class="item-text">
+                                                            <a href="product-template.html">{{$item['title']}}</a>
+                                                            {{-- <span class="item-option">
+                                                                <span class="item-title">Color:</span>
+                                                                <span class="item-type">Black</span>
+                                                            </span> --}}
+                                                            <span class="item-option">
+                                                                <span class="item-price">${{$item['price']}}</span>
+                                                            </span>
+                                                        </div>
+                                                        <!-- cart-title send -->
+                                                    </li>
+                                                     <!-- cart-info end -->
+                                                    <!-- cart-qty start -->
+                                                    <li class="item-qty">
+                                                        <div class="product-quantity-action">
+                                                            <div class="product-quantity">
+                                                                <div class="cart-plus-minus">
+                                                                    <!-- Minus Button -->
+                                                                    <button class="dec qtybutton minus" type="button"><i class="fa-solid fa-minus"></i></button>
 
-                                                        <h3 class="product-title">
-                                                            <a href="{{route('productDetails', $item['slug'])}}">{{$item['title']}}</a>
-                                                        </h3>
-                                                    </div>
-                                                </td>
-                                                <td class="quantity-col">
-                                                    <div class="cart-product-quantity">
-                                                        <input type="number" class="form-control cart-quantity" value="{{$item['quantity']}}"
-                                                            min="1" max="{{ $item['stock'] }}" step="1"
-                                                            data-decimals="0"
-                                                            data-id="{{ $item['product_id'] }}"
-                                                            data-price="{{($item['price'])}}"
-                                                            data-stock="{{ $item['stock'] }}"
-                                                        required>
+                                                                    <!-- Input field with the same attributes as the first one -->
+                                                                    <input type="number" name="quantity" class="form-control cart-quantity" value="1"
+                                                                           min="1" max="{{ $item['stock'] }}" step="1"
+                                                                           data-id="{{ $item['product_id'] }}"
+                                                                           data-price="{{ $item['price'] }}"
+                                                                           data-stock="{{ $item['stock'] }}" required>
+
+                                                                    <!-- Plus Button -->
+                                                                    <button class="inc qtybutton plus" type="button"><i class="fa-solid fa-plus"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Hidden stock warning message -->
                                                         <small class="text-danger stock-message d-none">Stock is over!</small>
-                                                    </div>
-                                                </td>
-                                                <td class="price-col">${{$item['price']}}</td>
-                                                <td class="total-col">$<span class="product-total">{{ number_format($item['price'] * $item['quantity'], 2) }}</span></td>
-                                                <td class="remove-col">
-                                                    <a href="{{ route('cart.remove', $item['product_id']) }}" class="btn btn-danger">
-                                                        <i class="icon-close"></i>
+
+                                                        <div class="item-remove">
+                                                            <span class="remove-wrap">
+                                                                {{-- <a href="{{ route('cart.remove', $item['product_id']) }}" class="btn btn-danger">
+                                                                    <i class="icon-close"></i>
+                                                                </a> --}}
+                                                                <a href="{{ route('cart.remove', $item['product_id']) }}" class="text-danger">Remove</a>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                    <!-- cart-qty end -->
+                                                    <!-- cart-price start -->
+                                                    <li class="item-price">
+                                                        <span class="amount full-price">{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                                                    </li>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="4" class="text-center">
+                                                        <h3>Your cart is empty.</h3>
+                                                    </td>
+                                                </tr>
+                                            @endif
+
+                                            <!-- cart-price end -->
+                                        </ul>
+                                        {{-- <ul class="cart-wrap">
+                                            <!-- cart-info start -->
+                                            <li class="item-info">
+                                                <!-- cart-img start -->
+                                                <div class="item-img">
+                                                    <a href="product-template.html">
+                                                        <img src="img/menu/home-pro-banner2.jpg" class="img-fluid" alt="p-2">
                                                     </a>
-                                                    {{-- <button class="btn-remove"><i class="icon-close"></i></button> --}}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @else
-                                    <tr>
-                                        <td colspan="4" class="text-center">
-                                            <h3>Your cart is empty.</h3>
-                                        </td>
-                                    </tr>
-                                    @endif
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="cart-bottom w-100 d-block mt-4">
-                            <div class="d-sm-flex align-items-center justify-content-end">
-                                {{-- <div class="cart-discount mb-1 mb-sm-0 w-100">
-                                    <form action="#">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" required
-                                                placeholder="coupon code">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-primary-2 px-4" type="submit">
-                                                   Apply
-                                                </button>
-                                            </div><!-- .End .input-group-append -->
+                                                </div>
+                                                <!-- cart-img end -->
+                                                <!-- cart-title start -->
+                                                <div class="item-text">
+                                                    <a href="product-template.html">Portable speaker</a>
+                                                    <span class="item-option">
+                                                        <span class="item-title">Color:</span>
+                                                        <span class="item-type">White</span>
+                                                    </span>
+                                                    <span class="item-option">
+                                                        <span class="item-price">$21,00</span>
+                                                    </span>
+                                                </div>
+                                                <!-- cart-title send -->
+                                            </li>
+                                            <!-- cart-info end -->
+                                            <!-- cart-qty start -->
+                                            <li class="item-qty">
+                                                <div class="product-quantity-action">
+                                                    <div class="product-quantity">
+                                                        <div class="cart-plus-minus">
+                                                            <button class="dec qtybutton minus"><i class="fa-solid fa-minus"></i></button>
+                                                            <input type="text" name="quantity" value="1">
+                                                            <button class="inc qtybutton plus"><i class="fa-solid fa-plus"></i></button>
+                                                        </div>
+                                                        <span class="dec qtybtn"></span>
+                                                        <span class="inc qtybtn"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-remove">
+                                                    <span class="remove-wrap">
+                                                        <a href="javascript:void(0)" class="text-danger">Remove</a>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                            <!-- cart-qty end -->
+                                            <!-- cart-price start -->
+                                            <li class="item-price">
+                                                <span class="amount full-price">$21,00</span>
+                                            </li>
+                                            <!-- cart-price end -->
+                                        </ul>
+                                        <ul class="cart-wrap">
+                                            <!-- cart-info start -->
+                                            <li class="item-info">
+                                                <!-- cart-img start -->
+                                                <div class="item-img">
+                                                    <a href="product-template.html">
+                                                        <img src="img/menu/home-pro-banner3.jpg" class="img-fluid" alt="p-3">
+                                                    </a>
+                                                </div>
+                                                <!-- cart-img end -->
+                                                <!-- cart-title start -->
+                                                <div class="item-text">
+                                                    <a href="product-template.html">Verse earphones</a>
+                                                    <span class="item-option">
+                                                        <span class="item-title">Color:</span>
+                                                        <span class="item-type">Red</span>
+                                                    </span>
+                                                    <span class="item-option">
+                                                        <span class="item-price">$24,00</span>
+                                                    </span>
+                                                </div>
+                                                <!-- cart-title send -->
+                                            </li>
+                                            <!-- cart-info end -->
+                                            <!-- cart-qty start -->
+                                            <li class="item-qty">
+                                                <div class="product-quantity-action">
+                                                    <div class="product-quantity">
+                                                        <div class="cart-plus-minus">
+                                                            <button class="dec qtybutton minus"><i class="fa-solid fa-minus"></i></button>
+                                                            <input type="text" name="quantity" value="1">
+                                                            <button class="inc qtybutton plus"><i class="fa-solid fa-plus"></i></button>
+                                                        </div>
+                                                        <span class="dec qtybtn"></span>
+                                                        <span class="inc qtybtn"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-remove">
+                                                    <span class="remove-wrap">
+                                                        <a href="javascript:void(0)" class="text-danger">Remove</a>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                            <!-- cart-qty end -->
+                                            <!-- cart-price start -->
+                                            <li class="item-price">
+                                                <span class="amount full-price">$24,00</span>
+                                            </li>
+                                            <!-- cart-price end -->
+                                        </ul> --}}
+                                    </div>
+                                    <div class="cart-buttons">
+                                        <a href="collection.html" class="btn-style2">Continue shopping</a>
+                                        <a href="cart-empty.html" class="btn-style2">Clear cart</a>
+                                    </div>
+                                </div>
+                                <div class="special-notes">
+                                    <label>Special instructions for seller</label>
+                                    <textarea rows="10" name="note"></textarea>
+                                </div>
+                            </div>
+                            <div class="cart-info-wrap">
+                                <div class="cart-calculator cart-info">
+                                    <h6>Shipping info</h6>
+                                    <div class="culculate-shipping" id="shipping-calculator">
+                                        <ul>
+                                            <li class="field">
+                                                <label>Country</label>
+                                                <select>
+                                                    <option>India</option>
+                                                    <option>Afghanistan</option>
+                                                    <option>Austria </option>
+                                                    <option>Belgium</option>
+                                                    <option>Bhutan</option>
+                                                    <option>Canada</option>
+                                                    <option>France</option>
+                                                    <option>Germany</option>
+                                                    <option>Maldives</option>
+                                                    <option>Nepal</option>
+                                                </select>
+                                            </li>
+                                            <li class="field">
+                                                <label>State</label>
+                                                <select>
+                                                    <option>Gujarat</option>
+                                                    <option>Andaman and Nicobar Islands</option>
+                                                    <option>Andhra Pradesh</option>
+                                                    <option>Bihar</option>
+                                                    <option>Chandigarh</option>
+                                                    <option>Delhi</option>
+                                                    <option>Haryana</option>
+                                                    <option>Jammu and Kashmir</option>
+                                                    <option>Karnataka</option>
+                                                    <option>Ladakh</option>
+                                                </select>
+                                            </li>
+                                            <li class="field cpn-code">
+                                                <label>Postal/Zip Codes</label>
+                                                <input type="text" name="q" placeholder="Zip/Postal Code">
+                                            </li>
+                                        </ul>
+                                        <div class="shipping-info">
+                                            <a href="javascript:void(0)" class="btn btn-style2">Calculate</a>
                                         </div>
-                                    </form>
-                                </div> --}}
-                                <div class="">
-                                    <a href="{{route('shop')}}" class="btn btn-outline-dark-2 btn-block py-3">
-                                        <span>CONTINUE SHOPPING</span><i class="icon-refresh"></i>
-                                    </a>
+                                    </div>
+                                </div>
+                                <div class="cart-total-wrap cart-info">
+                                    <div class="cart-total">
+                                        <div class="total-amount">
+                                            <h6 class="total-title">Total</h6>
+                                            <span class="amount total-price">$56.00</span>
+                                        </div>
+                                        <div class="proceed-to-discount">
+                                            <input type="text" name="discount" placeholder="Discount code">
+                                        </div>
+                                        <div class="proceed-to-checkout">
+                                            <a href="checkout-style1.html" class="btn btn-style2">Checkout</a>
+                                        </div>
+                                        <div class="cart-payment-icon">
+                                            <ul class="payment-icon">
+                                                <li>
+                                                    <a href="index.html">
+                                                        <img src="img/payment/pay-1.jpg" class="img-fluid" alt="pay-1">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="index.html">
+                                                        <img src="img/payment/pay-2.jpg" class="img-fluid" alt="pay-2">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="index.html">
+                                                        <img src="img/payment/pay-3.jpg" class="img-fluid" alt="pay-3">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="index.html">
+                                                        <img src="img/payment/pay-4.jpg" class="img-fluid" alt="pay-4">
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <aside class="col-lg-3">
-                        <div class="summary summary-cart">
-                            <h3 class="summary-title">Cart Total</h3>
-
-                            <table class="table table-summary">
-                                <tbody>
-                                    <tr class="summary-shipping">
-                                        <td class="pb-0">Subtotal:</td>
-                                        <td class="pb-0">$<span id="cart-subtotal">{{ $subtotal }}</span></td>
-                                    </tr>
-                                    {{-- <tr class="summary-shipping">
-                                        <td class="pb-0">Discount (10%):</td>
-                                        <td class="pb-0">-$16.00</td>
-                                    </tr>
-                                    <tr class="summary-shipping">
-                                        <td class="pb-0">Tax (8%):</td>
-                                        <td class="pb-0">$11.52</td>
-                                    </tr>
-                                    <tr class="summary-shipping">
-                                        <td class="pb-0">Shipping:</td>
-                                        <td class="pb-0">$5.00</td>
-                                    </tr> --}}
-                                    <tr class="summary-total">
-                                        <td><strong>Total:</strong></td>
-                                        <td><strong>$<span id="cart-total">{{ $subtotal }}</span></strong></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            @if (count($cartItems) > 0)
-                                {{-- @auth
-                                    <form action="{{ route('user.checkout') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="total" value="{{ $subtotal }}">
-                                        <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</button>
-                                    </form>
-                                @else
-                                    <a href="{{route('login')}}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
-                                @endauth --}}
-                                <a href="{{ route('checkout') }}" class="btn btn-checkout"><i class="fas fa-lock"></i> Checkout</a>
-                                {{-- <form action="{{ route('checkout') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="total" value="{{ $subtotal }}">
-                                    <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</button>
-                                </form> --}}
-                            @endif
-                        </div>
-
-
-                    </aside>
                 </div>
             </div>
-        </div>
-    </div>
+        </form>
+    </section>
 
 @endsection
 

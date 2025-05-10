@@ -45,9 +45,12 @@ class CartController extends Controller
 
         $cart = Session::get('cart', []);
 
+        // dd($request->all(),$cart);
         if (isset($cart[$product->id])) {
+            // dd($cart[$product->id]);
             $cart[$product->id]['quantity'] += 1;
         } else {
+            // dd('new');
             $cart[$product->id] = [
                 'product_id' => $product->id,
                 'slug'       => $product->slug,
